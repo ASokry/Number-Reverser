@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
+Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:42:29
 Number Reverse						     Page 1 - 1
 
 
@@ -192,25 +192,24 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
 
  00000000			.data
 				; Prompt
- 00000000 45 6E 74 65 72	prompt			BYTE	"Enter file name (include file extension): ",0
+ 00000000 45 6E 74 65 72	prompt			BYTE	"Enter file name (include extension): ",0
 	   20 66 69 6C 65
 	   20 6E 61 6D 65
 	   20 28 69 6E 63
 	   6C 75 64 65 20
-	   66 69 6C 65 20
 	   65 78 74 65 6E
 	   73 69 6F 6E 29
 	   3A 20 00
 										
 				; File Related
- 0000002B  00000015 [		fileName		BYTE	21 DUP(0)
+ 00000026  00000015 [		fileName		BYTE	21 DUP(0)
 	    00
 	   ]
- 00000040  00001388 [		fileBuffer      BYTE    MAX_FILE_SIZE DUP(?)
+ 0000003B  00001388 [		fileBuffer      BYTE    MAX_FILE_SIZE DUP(?)
 	    00
 	   ]
- 000013C8 00000000		bytesRead		DWORD	?
- 000013CC 49 6E 76 61 6C	fileNameError   BYTE    "Invalid fileName... Please ensure the file is in the same directory as the ASM file.",13,10,0
+ 000013C3 00000000		bytesRead		DWORD	?
+ 000013C7 49 6E 76 61 6C	fileNameError   BYTE    "Invalid fileName... Please ensure the file is in the same directory as the ASM file.",13,10,0
 	   69 64 20 66 69
 	   6C 65 4E 61 6D
 	   65 2E 2E 2E 20
@@ -228,23 +227,23 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
 	   41 53 4D 20 66
 	   69 6C 65 2E 0D
 	   0A 00
- 00001423 45 72 72 6F 72	fileReadError   BYTE    "Error in Reading File.",0
+ 0000141E 45 72 72 6F 72	fileReadError   BYTE    "Error in Reading File.",0
 	   20 69 6E 20 52
 	   65 61 64 69 6E
 	   67 20 46 69 6C
 	   65 2E 00
 
 				; Integer Array
- 0000143A  000003E8 [		intArray		SDWORD	1000 DUP(?)
+ 00001435  000003E8 [		intArray		SDWORD	1000 DUP(?)
 	    00000000
 	   ]
 
 				; Print Strings
- 000023DA 52 65 76 65 72	reverseOrder	BYTE	"Reverse Order:",13,10,0
+ 000023D5 52 65 76 65 72	reverseOrder	BYTE	"Reverse Order:",13,10,0
 	   73 65 20 4F 72
 	   64 65 72 3A 0D
 	   0A 00
- 000023EB 21 21 21 45 6E	endProgram		BYTE	"!!!End of Program!!!",13,10,0
+ 000023E6 21 21 21 45 6E	endProgram		BYTE	"!!!End of Program!!!",13,10,0
 	   64 20 6F 66 20
 	   50 72 6F 67 72
 	   61 6D 21 21 21
@@ -262,10 +261,10 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
  00000004  BA 00000000 R     2		MOV		EDX, OFFSET prompt
  00000009  E8 00000000 E     2		CALL	WriteString
  0000000E  5A		     2		POP		EDX
- 0000000F  BA 0000002B R     1		MOV		EDX, OFFSET fileName
+ 0000000F  BA 00000026 R     1		MOV		EDX, OFFSET fileName
  00000014  B9 00000014	     1		MOV		ECX, SIZEOF fileName-1
  00000019  E8 00000000 E     1		CALL	ReadString
- 0000001E  A3 000013C8 R     1		MOV		bytesRead, EAX
+ 0000001E  A3 000013C3 R     1		MOV		bytesRead, EAX
  00000023  E8 00000000 E     1		CALL	CrLf
  00000028  59		     1		POP		ECX
  00000029  58		     1		POP		EAX
@@ -276,23 +275,23 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
  0000002B  52		     1		PUSH	EDX
  0000002C  50		     1		PUSH	EAX
  0000002D  51		     1		PUSH	ECX
- 0000002E  BA 0000002B R     1		MOV		EDX, OFFSET fileName
+ 0000002E  BA 00000026 R     1		MOV		EDX, OFFSET fileName
  00000033  E8 00000000 E     1		CALL	OpenInputFile
  00000038  83 F8 FF	     1		CMP		EAX, INVALID_HANDLE_VALUE
  0000003B  75 13	     1		JNE	   ??0000						; filename is valid
  0000003D  52		     2		PUSH	EDX
- 0000003E  BA 000013CC R     2		MOV		EDX, OFFSET fileNameError
+ 0000003E  BA 000013C7 R     2		MOV		EDX, OFFSET fileNameError
  00000043  E8 00000000 E     2		CALL	WriteString
  00000048  5A		     2		POP		EDX
  00000049  E8 00000000 E     1		CALL	CrLf
  0000004E  EB 24	     1		JMP    ??0002
  00000050		     1	??0000:
- 00000050  BA 00000040 R     1		MOV		EDX, OFFSET fileBuffer 
+ 00000050  BA 0000003B R     1		MOV		EDX, OFFSET fileBuffer 
  00000055  B9 00001387	     1		MOV		ECX, MAX_FILE_SIZE-1
  0000005A  E8 00000000 E     1		CALL	ReadFromFile
  0000005F  73 1A	     1		JNC    ??0001							;jump if errors
  00000061  52		     2		PUSH	EDX
- 00000062  BA 00001423 R     2		MOV		EDX, OFFSET fileReadError
+ 00000062  BA 0000141E R     2		MOV		EDX, OFFSET fileReadError
  00000067  E8 00000000 E     2		CALL	WriteString
  0000006C  5A		     2		POP		EDX
  0000006D  E8 00000000 E     1		CALL	CrLf
@@ -307,12 +306,12 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
  00000082  5A		     1		POP		EDX
 
 					; Parse Ints
- 00000083  68 00000040 R		PUSH	OFFSET fileBuffer
- 00000088  68 0000143A R		PUSH	OFFSET intArray
+ 00000083  68 0000003B R		PUSH	OFFSET fileBuffer
+ 00000088  68 00001435 R		PUSH	OFFSET intArray
  0000008D  E8 00000011			CALL	ParseIntsFromString
 
 					; Print Ints in Reverse
- 00000092  68 0000143A R		PUSH	OFFSET intArray
+ 00000092  68 00001435 R		PUSH	OFFSET intArray
  00000097  E8 000000A3			CALL	WriteIntsReverse
 
 					Invoke ExitProcess,0
@@ -362,12 +361,12 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
 					; Check if character is a BACKSLASH
  000000C3  3C 0D			CMP		AL, CARRIAGE_RETURN	
  000000C5  75 09			JNE	   _Continue
- 000000C7			_GetNextDay:
+ 000000C7			_GetNextInt:
  000000C7  AC				LODSB
  000000C8  41				INC		ECX								; Increment pass \r\n in list
  000000C9  83 F9 02			CMP		ECX, 2
  000000CC  74 02			JE	   _Continue
- 000000CE  EB F7			JMP	   _GetNextDay
+ 000000CE  EB F7			JMP	   _GetNextInt
  000000D0			_Continue:
  000000D0  B9 00000000			MOV		ECX, 0
 
@@ -467,7 +466,7 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
 					mDisplayString OFFSET reverseOrder
 
  00000151  52		     1		PUSH	EDX
- 00000152  BA 000023DA R     1		MOV		EDX, OFFSET reverseOrder
+ 00000152  BA 000023D5 R     1		MOV		EDX, OFFSET reverseOrder
  00000157  E8 00000000 E     1		CALL	WriteString
  0000015C  5A		     1		POP		EDX
 
@@ -500,7 +499,7 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
  0000018E  E8 00000000 E		CALL	CrLf
 					mDisplayString OFFSET endProgram
  00000193  52		     1		PUSH	EDX
- 00000194  BA 000023EB R     1		MOV		EDX, OFFSET endProgram
+ 00000194  BA 000023E6 R     1		MOV		EDX, OFFSET endProgram
  00000199  E8 00000000 E     1		CALL	WriteString
  0000019E  5A		     1		POP		EDX
 
@@ -634,7 +633,7 @@ Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
  00000230			WriteVal ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:27:30
+Microsoft (R) Macro Assembler Version 14.44.35222.0	    03/03/26 14:42:29
 Number Reverse						     Symbols 2 - 1
 
 
@@ -738,7 +737,7 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00002402 Para	  Public  'DATA'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 000023FD Para	  Public  'DATA'	
 _TEXT  . . . . . . . . . . . . .	32 Bit	 00000230 Para	  Public  'CODE'	
 
 
@@ -795,7 +794,7 @@ ParseDecimal32 . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ParseInteger32 . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ParseIntsFromString  . . . . . .	P Near	 000000A3 _TEXT	Length= 0000009C Public STDCALL
   _Loop  . . . . . . . . . . . .	L Near	 000000C2 _TEXT	
-  _GetNextDay  . . . . . . . . .	L Near	 000000C7 _TEXT	
+  _GetNextInt  . . . . . . . . .	L Near	 000000C7 _TEXT	
   _Continue  . . . . . . . . . .	L Near	 000000D0 _TEXT	
   _ConcatenateDigit  . . . . . .	L Near	 000000F3 _TEXT	
   _NegativeIsTrue  . . . . . . .	L Near	 00000103 _TEXT	
@@ -1103,17 +1102,17 @@ WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-bytesRead  . . . . . . . . . . .	DWord	 000013C8 _DATA	
+bytesRead  . . . . . . . . . . .	DWord	 000013C3 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
-endProgram . . . . . . . . . . .	Byte	 000023EB _DATA	
+endProgram . . . . . . . . . . .	Byte	 000023E6 _DATA	
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
-fileBuffer . . . . . . . . . . .	Byte	 00000040 _DATA	
-fileNameError  . . . . . . . . .	Byte	 000013CC _DATA	
-fileName . . . . . . . . . . . .	Byte	 0000002B _DATA	
-fileReadError  . . . . . . . . .	Byte	 00001423 _DATA	
+fileBuffer . . . . . . . . . . .	Byte	 0000003B _DATA	
+fileNameError  . . . . . . . . .	Byte	 000013C7 _DATA	
+fileName . . . . . . . . . . . .	Byte	 00000026 _DATA	
+fileReadError  . . . . . . . . .	Byte	 0000141E _DATA	
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
-intArray . . . . . . . . . . . .	DWord	 0000143A _DATA	
+intArray . . . . . . . . . . . .	DWord	 00001435 _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
 lightGray  . . . . . . . . . . .	Number	 00000007h   
@@ -1123,7 +1122,7 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 prompt . . . . . . . . . . . . .	Byte	 00000000 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-reverseOrder . . . . . . . . . .	Byte	 000023DA _DATA	
+reverseOrder . . . . . . . . . .	Byte	 000023D5 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
